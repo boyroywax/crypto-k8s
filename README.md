@@ -30,34 +30,39 @@ A. Configure Atomic Pi's for k3s.
   ```
   * Disable Swap
   
- B. Add host entries to ```/user/username/.ssh/config```
-   * Example:
-   ```text
-   Host atomic
+B. Add host entries to ```/user/username/.ssh/config```.
+  * Example ssh config file located on my MacBook Pro:
+  ```text
+  # example atomic pi ssh config
+  # example path: /user/username/.ssh/config
+  Host atomic
 	HostName atomic.local
 	Port 22
 	User atomicpi
 	IdentityFile ~/.ssh/id_openvpn
 
-Host atomic2
+  Host atomic2
         HostName atomic2.local
         Port 22
         User atomicpi
         IdentityFile ~/.ssh/id_openvpn
 
-Host atomic3
+  Host atomic3
         HostName atomic3.local
         Port 22
         User atomicpi
         IdentityFile ~/.ssh/id_openvpn
 
-Host atomic4
+  Host atomic4
         HostName atomic4.local
         Port 22
         User atomicpi
         IdentityFile ~/.ssh/id_rsa
    ```
 
+
 * More Atomic Pi resources
   * http://www.hydrogen18.com/blog/first-hour-with-the-atomic-pi.html
   
+## 2. Install k3s cluster.
+A. Use my atomic
