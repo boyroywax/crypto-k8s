@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tokemon-wallet
+  namespace: crypto
+spec:
+  ports:
+  - name: tokemon-wallet
+    port: 56000
+    protocol: TCP
+    targetPort: 56000
+  selector:
+    app: tokemon
+    tier: wallet
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tkmn-wallet-rpc
+  namespace: crypto
+spec:
+  type: ClusterIP
+  ports:
+  - port: 57000
+    name: tkmn-wallet-rpc
+  selector:
+    app: tokemon
+    tier: wallet
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-wallet-tkmn
+  namespace: crypto
+  labels:
+    name: mynfs-tkmn # name can be anything
+spec:
+  storageClassName: manual # same storage class as pvc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.0.27 # ip addres of nfs server
+    path: "/media/nfs/" # path to directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-wallet-tkmn
+  namespace: crypto
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany #  must be the same as PersistentVolume
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tokemon-wallet
+  namespace: crypto
+  labels:
+    app: tokemon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tokemon
+      tier: wallet
+  template:
+    metadata:
+      labels:
+        app: tokemon
+        tier: wallet
+    spec:
+      containers:
+      - image: boyroywax/tokemon-wallet:latest
+        name: tokemon-wallet
+        ports:
+        - containerPort: 56000
+          name: tkmn-wallet
+          protocol: TCP
+        - containerPort: 57000
+          name: tkmn-wallet-rpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /root/.tokemon
+          name: tokemon-vol1
+          readOnly: false
+          subPath: tokemon/wallet
+      volumes:
+      - name: tokemon-vol1
+        persistentVolumeClaim:
+          claimName: nfs-pvc-wallet-tkmn
+      restartPolicy: Always
+status: {}

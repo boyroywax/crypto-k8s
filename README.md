@@ -78,6 +78,38 @@ B. Add host entries to ```/user/username/.ssh/config```.
   * http://www.hydrogen18.com/blog/first-hour-with-the-atomic-pi.html
 
 ## 2. Install NFS server.
+A. Update Raspberry Pi 4 and upgrade.
+```shell
+sudo apt update && sudo apt upgrade -y
+```
+
+B. Install the NFS server packages.
+```shell
+sudo apt-get install nfs-kernel-server portmap nfs-common
+```
+
+C. Create the NFS folder for sharing.
+```shell
+export MOUNT=/media
+mkdir -p $MOUNT/nfs && \
+sudo chmod -R 777 $MOUNT/nfs
+sudo chown nobody:nogroup $MOUNT/nfs
+```
+
+D. Add share folder to ```/etc/exports```.
+``` shell
+sudo echo -e "$MOUNT/nfs 192.168.1.0/24(rw,sync,no_subtree_check,insecure,no_root_squash)" >> /etc/exports
+```
+
+E. Reset exports.
+```shell
+sudo exportfs -a
+```
+
+F. Restart the NFS service.
+```shell
+sudo systemctl restart nfs-kernel-server
+```
 
 ## 3. Install k3s cluster.
 A. Use Ansible playbook.
@@ -101,7 +133,9 @@ B. Configure the playbook.
   master
   node
   ```
-  * Edit ```group_vars/all.yml```.  Pay attention to the IP of your master.  ```Full_clean_install``` deletes all previous k3s files for a fresh install.  The file is commented with the variables description.
+  * Edit ```group_vars/all.yml```.  Pay attention to the IP of your master.  
+  ```Full_clean_install``` deletes all previous k3s files for a fresh install.  
+  The file is commented with the variables description.
 
 C. Run the Ansible playbook.
   * 
@@ -114,3 +148,32 @@ D. K3s config file located at ```ansible-k3s-atomic/files/k3s.yml```
   export KUBECONFIG=$PWD/ansible-k3s-atomic/files/k3s.yml
   kubectl get nodes # test by checking for nodes
   ```
+
+## 4. Configure MetalLB
+A. Edit the IP address range in ```config.yaml```.
+
+B. Run the ```run_metal.sh``` script.
+```shell
+./run_metal.sh
+```
+
+## 5. Deploy crypto wallets.
+A. Create ```crypto``` namespace.
+```shell
+kubectl create ns crypto
+```
+
+B. Run ```deploy_all.sh``` script.
+```shell
+./deploy_all.sh
+```
+
+C. Clean Up: Remove crypto wallets.
+```shell
+./delete_all.sh
+```
+
+D. Getinfo from all the running wallets. * NOT FINISHED
+```shell
+./getinfo_all.sh
+```
