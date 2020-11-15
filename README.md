@@ -20,6 +20,7 @@ Crypto Wallets on Kubernetes
 7. Deploy web wallets.*
 ```text
 * = Incomplete or Not Started
+```
 
 ## 1. Prepare development environment.
 A. Configure Atomic Pi's for k3s.
