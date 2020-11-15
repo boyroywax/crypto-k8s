@@ -29,6 +29,35 @@ A. Configure Atomic Pi's for k3s.
   sudo nano /etc/hostname
   ```
   * Disable Swap
-B. More Atomic Pi resources
+  
+ B. Add host entries to ```/user/username/.ssh/config```
+   * Example:
+   ```text
+   Host atomic
+	HostName atomic.local
+	Port 22
+	User atomicpi
+	IdentityFile ~/.ssh/id_openvpn
+
+Host atomic2
+        HostName atomic2.local
+        Port 22
+        User atomicpi
+        IdentityFile ~/.ssh/id_openvpn
+
+Host atomic3
+        HostName atomic3.local
+        Port 22
+        User atomicpi
+        IdentityFile ~/.ssh/id_openvpn
+
+Host atomic4
+        HostName atomic4.local
+        Port 22
+        User atomicpi
+        IdentityFile ~/.ssh/id_rsa
+   ```
+
+* More Atomic Pi resources
   * http://www.hydrogen18.com/blog/first-hour-with-the-atomic-pi.html
   
