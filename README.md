@@ -173,7 +173,7 @@ C. Clean Up: Remove crypto wallets.
 ./delete_all.sh
 ```
 
-D. Getinfo from all the running wallets. * NOT FINISHED
+D. Getinfo from all the running wallets.
 ```shell
 ./getinfo_all.sh
 ```
