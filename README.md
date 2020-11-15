@@ -12,8 +12,8 @@ Crypto Wallets on Kubernetes
 
 ## Index
 1. Prepare development environment.
-2. Install k3s cluster.
-3. Install NFS server.
+2. Install NFS server.
+3. Install k3s cluster.
 4. Configure MetalLB.
 5. Deploy crypto wallets.
 6. Deploy block explorers.*
@@ -41,6 +41,7 @@ A. Configure Atomic Pi's for k3s.
   static routers=192.168.0.1
   statis domain_name_servers=75.75.75.75
   ```
+  * https://raspberrypi.stackexchange.com/questions/68477/static-ip-configuration-in-dhcpcd-conf-ignored
 
 B. Add host entries to ```/user/username/.ssh/config```.
   * Example ssh config file located on MacBook Pro:
@@ -75,8 +76,10 @@ B. Add host entries to ```/user/username/.ssh/config```.
 
 * More Atomic Pi resources
   * http://www.hydrogen18.com/blog/first-hour-with-the-atomic-pi.html
-  
-## 2. Install k3s cluster.
+
+## 2. Install NFS server.
+
+## 3. Install k3s cluster.
 A. Use Ansible playbook.
   * Download the latest playbook
   ```shell
@@ -104,4 +107,10 @@ C. Run the Ansible playbook.
   * 
   ```shell
   make
+  ```
+
+D. K3s config file located at ```ansible-k3s-atomic/files/k3s.yml```
+  ```shell
+  export KUBECONFIG=$PWD/ansible-k3s-atomic/files/k3s.yml
+  kubectl get nodes # test by checking for nodes
   ```
