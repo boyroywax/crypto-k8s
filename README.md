@@ -1,6 +1,8 @@
 # crypto-k8s
 Crypto Wallets on Kubernetes
 
+![Atomic pi cluster](./atomicpicluster.jpg)
+
 ## Development Environment
 * MacBook Pro (16gb ram)
 * 4 x Atomic Pi (x86 Intel, 2gb ram, 32gb ssd)
