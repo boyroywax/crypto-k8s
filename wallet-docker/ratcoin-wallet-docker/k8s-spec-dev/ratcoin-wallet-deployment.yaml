@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rat-wallet
+  namespace: crypto
+spec:
+  ports:
+  - name: rat-wallet-port
+    port: 19766
+    protocol: TCP
+    targetPort: 19766
+  selector:
+    app: rat
+    tier: wallet
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rat-wallet-rpc
+  namespace: crypto
+spec:
+  type: ClusterIP
+  ports:
+  - port: 19765
+    name: rat-wallet-rpc
+  selector:
+    app: rat
+    tier: wallet
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-wallet-rat
+  namespace: crypto
+  labels:
+    name: mynfs-rat # name can be anything
+spec:
+  storageClassName: manual # same storage class as pvc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.0.27 # ip addres of nfs server
+    path: "/media/nfs/" # path to directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-wallet-rat
+  namespace: crypto
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany #  must be the same as PersistentVolume
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rat-wallet
+  namespace: crypto
+  labels:
+    app: rat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rat
+      tier: wallet
+  template:
+    metadata:
+      labels:
+        app: rat
+        tier: wallet
+    spec:
+      containers:
+      - image: boyroywax/ratcoin-wallet:latest
+        name: rat-wallet
+        ports:
+        - containerPort: 19766
+          name: rat-wallet-port
+          protocol: TCP
+        - containerPort: 19765
+          name: rat-wallet-rpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /root/.RatCoin
+          name: ratcoin-vol1
+          readOnly: false
+          subPath: wallets/rat
+      volumes:
+      - name: ratcoin-vol1
+        persistentVolumeClaim:
+          claimName: nfs-pvc-wallet-rat
+      restartPolicy: Always
+status: {}

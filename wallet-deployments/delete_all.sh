@@ -1,4 +1,6 @@
 #!/bin/bash
-kubectl delete -f ratcoin-wallet-deployment.yaml
-sleep 10
-kubectl delete -f tokemon-wallet-deployment.yaml
+kubectl delete -f ../wallet-docker/pawcoin-wallet-docker/k8s-spec-dev/pawcoin-wallet-deployment.yaml
+sleep 5
+kubectl delete -f ../wallet-docker/ratcoin-wallet-docker/k8s-spec-dev/ratcoin-wallet-deployment.yaml
+sleep 5
+kubectl delete -f ../wallet-docker/tokemon-wallet-docker/k8s-spec-dev/tokemon-wallet-deployment.yaml

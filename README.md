@@ -73,6 +73,10 @@ B. Add host entries to ```/user/username/.ssh/config```.
         IdentityFile ~/.ssh/id_rsa
    ```
 
+C. Install Ansible and skaffold on MacBook Pro
+```shell
+brew install ansible skaffold
+```
 
 * More Atomic Pi resources
   * http://www.hydrogen18.com/blog/first-hour-with-the-atomic-pi.html

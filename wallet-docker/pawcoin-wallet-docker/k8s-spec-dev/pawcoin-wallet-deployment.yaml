@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pwc-wallet-port
+  namespace: crypto
+spec:
+  ports:
+  - name: port-tcp
+    port: 8322
+    protocol: TCP
+    targetPort: 8322
+    # nodePort: 30333
+  selector:
+    app: pwc
+    tier: wallet
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pwc-wallet
+  namespace: crypto
+spec:
+  ports:
+  - port: 9322
+    name: pwc-wallet
+  selector:
+    app: pwc
+    tier: wallet
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-pwc
+  namespace: crypto
+  labels:
+    name: pwcnfs # name can be anything
+spec:
+  storageClassName: manual # same storage class as pvc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.0.27 # ip addres of nfs server
+    path: "/media/nfs/" # path to directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-pwc
+  namespace: crypto
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany #  must be the same as PersistentVolume
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pwc-wallet
+  namespace: crypto
+  labels:
+    app: pwc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pwc
+      tier: wallet
+  template:
+    metadata:
+      labels:
+        app: pwc
+        tier: wallet
+    spec:
+      containers:
+      - name: pwc-wallet
+        image: boyroywax/pawcoin-wallet:latest
+        ports:
+        - containerPort: 8322
+          name: port-tcp
+          protocol: TCP
+        - containerPort: 9322
+          name: pwc-wallet
+        volumeMounts:
+        - mountPath: /root/.pawcoin
+          name: pawcoin-vol1
+          readOnly: false
+          subPath: wallets/pwc
+      volumes:
+      - name: pawcoin-vol1
+        persistentVolumeClaim:
+          claimName: nfs-pvc-pwc
+      restartPolicy: Always
+status: {}

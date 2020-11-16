@@ -1,0 +1,10 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+build:
+  artifacts:
+  - image: boyroywax/pawcoin-wallet
+    context: ./pawcoin-wallet
+deploy:
+  kubectl:
+    manifests:
+      - ./k8s-spec-dev/pawcoin-wallet-deployment.yaml

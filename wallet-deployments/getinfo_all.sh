@@ -11,4 +11,8 @@ do
     echo "Tokemon Wallet - $line"
     kubectl exec -n crypto "$line" -- /bin/tokemond getinfo
   fi
+  if [[ "$line" == *"pwc"* ]]; then
+    echo "Pawcoin Wallet - $line"
+    kubectl exec -n crypto "$line" -- /bin/pawcoin-cli getinfo
+  fi
 done < output
