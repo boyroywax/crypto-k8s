@@ -164,22 +164,29 @@ B. Run the ```run_metal.sh``` script.
 ```
 
 ## 5. Deploy crypto wallets.
-A. Create ```crypto``` namespace.
-```shell
-kubectl create ns crypto
-```
+A. Deploy with scripts.
+  * Create ```crypto``` namespace.
+  ```shell
+  kubectl create ns crypto
+  ```
 
-B. Run ```deploy_all.sh``` script.
-```shell
-./deploy_all.sh
-```
+  * Run ```deploy_all.sh``` script.
+  ```shell
+  ./deploy_all.sh
+  ```
 
-C. Clean Up: Remove crypto wallets.
-```shell
-./delete_all.sh
-```
+  * Clean Up: Remove crypto wallets.
+  ```shell
+  ./delete_all.sh
+  ```
 
-D. Getinfo from all the running wallets.
-```shell
-./getinfo_all.sh
-```
+  * Getinfo from all the running wallets.
+  ```shell
+  ./getinfo_all.sh
+  ```
+B. Deploy with skaffold.
+  * Individually start a wallet
+  ```shell
+  cd wallet-docker/coinname-wallet-docker
+  skaffold run --tail
+  ```
