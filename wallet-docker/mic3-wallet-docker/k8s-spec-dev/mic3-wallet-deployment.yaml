@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic3-wallet
+  namespace: crypto
+spec:
+  ports:
+  - name: mic3-wallet
+    port: 11099
+    protocol: TCP
+    targetPort: 11099
+  selector:
+    app: mic3
+    tier: wallet
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mic3-wallet-rpc
+  namespace: crypto
+spec:
+  type: ClusterIP
+  ports:
+  - port: 11098
+    name: mic3-wallet-rpc
+  selector:
+    app: mic3
+    tier: wallet
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-wallet-mic3
+  namespace: crypto
+  labels:
+    name: mynfs-mic3 # name can be anything
+spec:
+  storageClassName: manual # same storage class as pvc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.0.27 # ip addres of nfs server
+    path: "/media/nfs/" # path to directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc-wallet-mic3
+  namespace: crypto
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany #  must be the same as PersistentVolume
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mic3-wallet
+  namespace: crypto
+  labels:
+    app: mic3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mic3
+      tier: wallet
+  template:
+    metadata:
+      labels:
+        app: mic3
+        tier: wallet
+    spec:
+      containers:
+      - image: boyroywax/mic3-wallet:latest
+        name: mic3-wallet
+        ports:
+        - containerPort: 19766
+          name: mic3-wallet
+          protocol: TCP
+        - containerPort: 19765
+          name: mic3-wallet-rpc
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /root/.Mic3
+          name: mic3coin-vol1
+          readOnly: false
+          subPath: wallets/mic3
+      volumes:
+      - name: mic3coin-vol1
+        persistentVolumeClaim:
+          claimName: nfs-pvc-wallet-mic3
+      restartPolicy: Always
+status: {}

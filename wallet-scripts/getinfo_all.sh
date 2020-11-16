@@ -15,4 +15,8 @@ do
     echo "Pawcoin Wallet - $line"
     kubectl exec -n crypto "$line" -- /bin/pawcoin-cli getinfo
   fi
+  if [[ "$line" == *"mic3"* ]]; then
+    echo "Mic3 Wallet - $line"
+    kubectl exec -n crypto "$line" -- /bin/Mic3d getinfo
+  fi
 done < output

@@ -184,9 +184,13 @@ A. Deploy with scripts.
   ```shell
   ./getinfo_all.sh
   ```
+
 B. Deploy with skaffold.
   * Individually start a wallet
   ```shell
   cd wallet-docker/coinname-wallet-docker
   skaffold run --tail
   ```
+
+C. Deploy with Helm - NOT COMPLETE
+
