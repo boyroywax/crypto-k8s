@@ -1,6 +1,6 @@
 #!/bin/bash
-FILE=/root/.Mic3/Mousecoin.conf
-FILE2=/root/.Mic3/peers.dat
+FILE=/root/.Mousecoin/Mousecoin.conf
+FILE2=/root/.Mousecoin/peers.dat
 if [ ! -f "$FILE" ]; then
     cp /root/Mousecoin.conf $FILE
 fi

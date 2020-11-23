@@ -1,40 +1,40 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mic3-wallet
+  name: doge-wallet
   namespace: crypto
 spec:
   ports:
-  - name: mic3-wallet
-    port: 11099
+  - name: doge-wallet
+    port: 22556
     protocol: TCP
-    targetPort: 11099
+    targetPort: 22556
   selector:
-    app: mic3
+    app: doge
     tier: wallet
   type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mic3-wallet-rpc
+  name: doge-wallet-rpc
   namespace: crypto
 spec:
   type: ClusterIP
   ports:
-  - port: 11098
-    name: mic3-wallet-rpc
+  - port: 22555
+    name: doge-wallet-rpc
   selector:
-    app: mic3
+    app: doge
     tier: wallet
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs-pv-wallet-mic3
+  name: nfs-pv-wallet-doge
   namespace: crypto
   labels:
-    name: mynfs-mic3 # name can be anything
+    name: mynfs-doge # name can be anything
 spec:
   storageClassName: manual # same storage class as pvc
   capacity:
@@ -48,7 +48,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nfs-pvc-wallet-mic3
+  name: nfs-pvc-wallet-doge
   namespace: crypto
 spec:
   storageClassName: manual
@@ -61,40 +61,40 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mic3-wallet
+  name: doge-wallet
   namespace: crypto
   labels:
-    app: mic3
+    app: doge
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mic3
+      app: doge
       tier: wallet
   template:
     metadata:
       labels:
-        app: mic3
+        app: doge
         tier: wallet
     spec:
       containers:
-      - image: boyroywax/mic3-wallet:latest
-        name: mic3-wallet
+      - image: boyroywax/doge-wallet:latest
+        name: doge-wallet
         ports:
-        - containerPort: 11099
-          name: mic3-wallet
+        - containerPort: 22556
+          name: doge-wallet
           protocol: TCP
-        - containerPort: 11098
-          name: mic3-wallet-rpc
+        - containerPort: 22555
+          name: doge-wallet-rpc
           protocol: TCP
         volumeMounts:
-        - mountPath: /root/.Mousecoin
-          name: mic3coin-vol1
+        - mountPath: /root/.dogecoin
+          name: dogecoin-vol1
           readOnly: false
-          subPath: wallets/mic3
+          subPath: wallets/doge
       volumes:
-      - name: mic3coin-vol1
+      - name: dogecoin-vol1
         persistentVolumeClaim:
-          claimName: nfs-pvc-wallet-mic3
+          claimName: nfs-pvc-wallet-doge
       restartPolicy: Always
 status: {}
