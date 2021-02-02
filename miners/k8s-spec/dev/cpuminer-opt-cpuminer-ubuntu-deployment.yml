@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpuminer-opt-cpupower-dev
+  namespace: crypto
+  labels:
+    app: cpuminer-opt-cpupower
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpuminer-opt-cpupower
+      tier: miner
+  template:
+    metadata:
+      labels:
+        app: cpuminer-opt-cpupower
+        tier: miner
+    spec:
+      containers:
+      - image: boyroywax/cpuminer-opt-cpupower-ubuntu-dev:latest
+        name: cpuminer-opt-cpupower-ubuntu-dev
+        args: ["./cpuminer", "-a",  "cpupower", "-o", "stratum+tcp://MiningMadness.com:6550", "-u", "CVkM2g7nLawDZh18981yESbsYtjyKzK157.k8s", "-p", "c=CPU"]
+      restartPolicy: Always
+status: {}

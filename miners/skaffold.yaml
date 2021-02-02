@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+profiles:
+- name: cpuminer-dev
+  build:
+    artifacts:
+    - image: boyroywax/cpuminer-multi-alpine-dev
+      context: ./cpuminer-multi/
+      docker:
+        dockerfile: Dockerfile-alpine
+  deploy:
+    kubectl:
+      manifests:
+        - ./k8s-spec/dev/cpuminer-multi-deployment.yml
+- name: cpuminer-opt-cpupower-alpine-dev
+  build:
+    artifacts:
+    - image: boyroywax/cpuminer-opt-cpupower-alpine-dev
+      context: ./cpuminer-opt-cpupower/
+      docker:
+        dockerfile: Dockerfile-alpine
+  deploy:
+    kubectl:
+      manifests:
+        - ./k8s-spec/dev/cpuminer-opt-cpupower-alpine-deployment.yml
+- name: cpuminer-opt-cpupower-ubuntu-dev
+  build:
+    artifacts:
+    - image: boyroywax/cpuminer-opt-cpupower-ubuntu-dev
+      context: ./cpuminer-opt-cpupower/
+      docker:
+        dockerfile: Dockerfile-ubuntu
+  deploy:
+    kubectl:
+      manifests:
+        - ./k8s-spec/dev/cpuminer-opt-cpuminer-ubuntu-deployment.yml

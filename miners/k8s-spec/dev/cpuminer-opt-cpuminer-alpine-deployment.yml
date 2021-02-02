@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpuminer-opt-cpupower-dev
+  namespace: crypto
+  labels:
+    app: cpuminer-opt-cpupower
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpuminer-opt-cpupower
+      tier: miner
+  template:
+    metadata:
+      labels:
+        app: cpuminer-opt-cpupower
+        tier: miner
+    spec:
+      containers:
+      - image: boyroywax/cpuminer-opt-cpupower-alpine-dev:latest
+        name: cpuminer-opt-cpupower-alpine-dev
+      restartPolicy: Always
+status: {}

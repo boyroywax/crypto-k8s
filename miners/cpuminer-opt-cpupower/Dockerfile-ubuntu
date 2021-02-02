@@ -1,0 +1,56 @@
+FROM ubuntu:16.04
+
+# Install cpuminer-opt-cpupower
+RUN set -x \
+    # Runtime dependencies.
+ && apt-get update \
+ && apt-get install -y \
+        libcurl3 \
+        libgmp10 \
+        libjansson4 \
+        libssl1.0.0 \
+        openssl \
+    # Build dependencies.
+ && apt-get install -y \
+        autoconf \
+        automake \
+        curl \
+        g++ \
+        git \
+        libcurl4-openssl-dev \
+        libjansson-dev \
+        libssl-dev \
+        libgmp-dev \
+        make \
+        pkg-config \
+    # Compile from source code.
+ && git clone --recursive https://github.com/cpu-pool/cpuminer-opt-cpupower.git /tmp/cpuminer \
+ && cd /tmp/cpuminer \
+ && chmod +x build.sh \
+ && ./build.sh \
+ && mv cpuminer /usr/local/bin/
+
+
+ RUN apt-get purge -y \
+        autoconf \
+        automake \
+        curl \
+        g++ \
+        git \
+        libcurl4-openssl-dev \
+        libjansson-dev \
+        libssl-dev \
+        libgmp-dev \
+        make \
+        pkg-config \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /tmp/*
+
+# Copy the entrypoint
+WORKDIR /usr/local/bin
+COPY ./entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+USER nobody
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]

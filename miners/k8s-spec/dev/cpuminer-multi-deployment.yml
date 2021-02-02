@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpuminer-multi-dev
+  namespace: crypto
+  labels:
+    app: cpuminer-multi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpuminer-multi
+      tier: miner
+  template:
+    metadata:
+      labels:
+        app: cpuminer-multi
+        tier: miner
+    spec:
+      containers:
+      - image: boyroywax/cpuminer-multi-alpine-dev:latest
+        name: cpuminer-multi-alpine-dev
+        # args: ["cpuminer", "-a",  "cpupower", "-o", "stratum+tcp://MiningMadness.com:6550", "-u", "CVkM2g7nLawDZh18981yESbsYtjyKzK157.k8s", "-p", "c=CPU"]
+        # args: ["./cpuminer", "-a", "groestl", "-o", "stratum+tcp://hub.miningpoolhub.com:20486", "-u", "boyroywax.k8s:pass", "-p", "c=CPU"]
+      restartPolicy: Always
+status: {}
