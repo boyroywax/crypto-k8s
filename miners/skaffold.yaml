@@ -34,3 +34,14 @@ profiles:
     kubectl:
       manifests:
         - ./k8s-spec/dev/cpuminer-opt-cpuminer-ubuntu-deployment.yml
+- name: cpuminer-kawaii-rpi
+  build:
+    artifacts:
+    - image: boyroywax/cpuminer-kawaii-dev
+      context: ./cpuminer-kawaii/
+      docker:
+        dockerfile: Dockerfile.ubuntu2
+  deploy:
+    kubectl:
+      manifests:
+        - ./k8s-spec/dev/cpuminer-kawaii-deployment.yml

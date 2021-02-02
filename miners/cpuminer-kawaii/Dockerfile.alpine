@@ -1,0 +1,30 @@
+FROM arm32v7/alpine:3.13.1
+# Install CPUMiner-Multi
+RUN set -x \
+    # Runtime dependencies.
+ && apk add --no-cache \
+        libcurl \
+        libgcc \
+        libstdc++ \
+        openssl \
+    # Build dependencies.
+ && apk add --no-cache -t .build-deps \
+        autoconf \
+        automake \
+        build-base \
+        curl \
+        curl-dev \
+        git \
+        openssl-dev
+
+# Copy the Raspberry Pi Binary
+
+# Copy the entrypoint
+WORKDIR /usr/local/bin
+COPY ./cpuminer /usr/local/bin/
+RUN ["chmod", "+x", "/usr/local/bin/cpuminer"]
+COPY ./entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# USER nobody
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]

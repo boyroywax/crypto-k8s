@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpuminer-kawaii-dev
+  namespace: crypto
+  labels:
+    app: cpuminer-kawaii
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: cpuminer-kawaii
+      tier: miner
+  template:
+    metadata:
+      labels:
+        app: cpuminer-kawaii
+        tier: miner
+    spec:
+      containers:
+      - image: boyroywax/cpuminer-kawaii-dev:latest
+        name: cpuminer-kawaii-dev
+        args: ["./cpuminer", "-a", "groestl", "-o", "stratum+tcp://hub.miningpoolhub.com:20486", "-u", "boyroywax.k8s:pass", "-p", "c=CPU"]
+      restartPolicy: Always
+status: {}
