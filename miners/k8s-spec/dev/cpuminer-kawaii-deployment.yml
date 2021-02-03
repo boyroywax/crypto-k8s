@@ -7,7 +7,7 @@ metadata:
   labels:
     app: cpuminer-kawaii
 spec:
-  replicas: 6
+  replicas: 7
   selector:
     matchLabels:
       app: cpuminer-kawaii
@@ -21,6 +21,7 @@ spec:
       containers:
       - image: boyroywax/cpuminer-kawaii-dev:latest
         name: cpuminer-kawaii-dev
-        args: ["./cpuminer", "-a", "groestl", "-o", "stratum+tcp://hub.miningpoolhub.com:20486", "-u", "boyroywax.k8s:pass", "-p", "c=CPU"]
+        # args: ["./cpuminer", "-a", "groestl", "-o", "stratum+tcp://hub.miningpoolhub.com:20486", "-u", "boyroywax.k8s:pass", "-p", "c=CPU"]
+        args: ["./cpuminer", "-a", "yescrypt", "-o", "stratum+tcp://hub.miningpoolhub.com:20577", "-u", "boyroywax.k8s:pass", "-p", "c=CPU"]
       restartPolicy: Always
 status: {}

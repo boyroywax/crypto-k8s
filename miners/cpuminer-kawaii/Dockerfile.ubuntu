@@ -1,6 +1,5 @@
 FROM arm32v7/ubuntu:16.04
 
-
 # Install cpuminer-opt-cpupower
 RUN set -x \
     # Runtime dependencies.
@@ -25,11 +24,15 @@ RUN set -x \
         make \
         pkg-config
     # Compile from source code.
-#  && git clone --recursive https://github.com/cpu-pool/cpuminer-opt-cpupower.git /tmp/cpuminer \
-#  && cd /tmp/cpuminer \
-#  && chmod +x build.sh \
-#  && ./build.sh \
-#  && mv cpuminer /usr/local/bin/
+ RUN git clone --recursive https://github.com/cryptozeny/cpuminer-kawaii.git /tmp/cpuminer \
+ && cd /tmp/cpuminer \
+#  && chmod +x autogen.sh \
+#  && ./autogen.sh \
+#  && ./configure CFLAGS="-O3 -mfpu=neon" --with-crypto --with-curl \
+#  && make \
+ && chmod +x ./build-RPi.sh \
+ && ./build-RPi.sh \
+ && mv cpuminer /usr/local/bin/
 
 
  RUN apt-get purge -y \
@@ -40,7 +43,7 @@ RUN set -x \
         git \
         libcurl4-openssl-dev \
         libjansson-dev \
-        libssl-dev \
+       #  libssl-dev \
         libgmp-dev \
         make \
         pkg-config \
@@ -50,7 +53,6 @@ RUN set -x \
 
 # Copy the entrypoint
 WORKDIR /usr/local/bin
-COPY ./cpuminer /usr/local/bin/
 RUN chmod +x  /usr/local/bin/cpuminer
 COPY ./entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh

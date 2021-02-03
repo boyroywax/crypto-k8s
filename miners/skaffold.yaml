@@ -40,7 +40,7 @@ profiles:
     - image: boyroywax/cpuminer-kawaii-dev
       context: ./cpuminer-kawaii/
       docker:
-        dockerfile: Dockerfile.ubuntu2
+        dockerfile: Dockerfile.ubuntu
   deploy:
     kubectl:
       manifests:
